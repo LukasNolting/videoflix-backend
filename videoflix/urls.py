@@ -16,11 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from debug_toolbar.toolbar import debug_toolbar_urls
+# from debug_toolbar.toolbar import debug_toolbar_urls
+from videoflix_app.views import VideoView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-] + debug_toolbar_urls()
-urlpatterns += [
-    path('django-rq/', include('django_rq.urls'))
+    path('__debug__/', include('debug_toolbar.urls')),  # Debug Toolbar URLs
+    path('videos/', VideoView.as_view(), name='video-detail'),
 ]
+
+# + debug_toolbar_urls()
+# urlpatterns += [
+#     path('django-rq/', include('django_rq.urls'))
+# ]
