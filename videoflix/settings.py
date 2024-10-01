@@ -42,7 +42,17 @@ INSTALLED_APPS = [
     'rest_framework',
     'debug_toolbar',
     'django_rq',
+    'import_export',
+    'user',
 ]
+
+
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
+
+DEBUG = True
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/staticfiles')
 
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
