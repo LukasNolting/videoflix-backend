@@ -15,8 +15,8 @@ class VideoAdmin(ImportExportModelAdmin):
 
 
 
-from .admin import VideoResource
-dataset = VideoResource().export()
-print(dataset.csv)
+# from .admin import VideoResource
+# dataset = VideoResource().export()
+# print(dataset.csv)
 # id,name,author,author_email,imported,published,price,categories
 # 2,Some book,1,,0,2012-12-05,8.85,1
