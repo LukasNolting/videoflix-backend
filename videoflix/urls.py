@@ -18,12 +18,15 @@ from django.contrib import admin
 from django.urls import path, include
 # from debug_toolbar.toolbar import debug_toolbar_urls
 from videoflix_app.views import VideoView
+from django.conf.urls.static import static
+from videoflix import settings
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('__debug__/', include('debug_toolbar.urls')),  # Debug Toolbar URLs
-    path('videos/', VideoView.as_view(), name='video-detail'),
-]
+    path('videoflix/admin/', admin.site.urls),
+    path('videoflix/__debug__/', include('debug_toolbar.urls')),  # Debug Toolbar URLs
+    path('videoflix/videos/', VideoView.as_view(), name='video-detail'),
+] + staticfiles_urlpatterns()
 
 # + debug_toolbar_urls()
 # urlpatterns += [

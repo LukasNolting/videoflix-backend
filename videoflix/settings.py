@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-i$!@0i3b6v%-sx9&ofsfddvsm694fgtt3t%66r5au3@%cl1_uo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['35.216.177.61']
+ALLOWED_HOSTS = ['gruppe-49408.developerakademie.org']
 
 
 # Application definition
@@ -52,7 +52,7 @@ IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 # DEBUG = True
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'videoflix/static/staticfiles/')
 
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -110,10 +110,17 @@ WSGI_APPLICATION = 'videoflix.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': BASE_DIR / 'db.sqlite3',
+	'ENGINE': 'django.db.backends.postgresql',
+	'NAME': 'videoflix',
+	'USER': 'postgres',
+	'PASSWORD': '49408',
+	'HOST': 'localhost',
+	'PORT': '5432',
     }
 }
+
 
 
 # Password validation
@@ -150,7 +157,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = 'videoflix/static/staticfiles/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
