@@ -14,21 +14,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
+
 from django.urls import path, include
-# from debug_toolbar.toolbar import debug_toolbar_urls
-from videoflix_app.views import VideoView
-from django.conf.urls.static import static
-from videoflix import settings
+from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('videoflix/admin/', admin.site.urls),
-    path('videoflix/__debug__/', include('debug_toolbar.urls')),  # Debug Toolbar URLs
-    path('videoflix/videos/', VideoView.as_view(), name='video-detail'),
+    path('videoflix/__debug__/', include('debug_toolbar.urls')),
+    path('videoflix/', include('videoflix_app.urls')),
 ] + staticfiles_urlpatterns()
-
-# + debug_toolbar_urls()
-# urlpatterns += [
-#     path('django-rq/', include('django_rq.urls'))
-# ]
