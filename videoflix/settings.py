@@ -26,8 +26,13 @@ SECRET_KEY = 'django-insecure-i$!@0i3b6v%-sx9&ofsfddvsm694fgtt3t%66r5au3@%cl1_uo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['gruppe-49408.developerakademie.org', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['gruppe-49408.developerakademie.org', '127.0.0.1', 'localhost', 'http://localhost:4200']
 
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_METHODS = ['*']
+
+AUTH_USER_MODEL = 'videoflix_app.User'
 
 # Application definition
 
@@ -44,6 +49,8 @@ INSTALLED_APPS = [
     'django_rq',
     'import_export',
     'user',
+    'corsheaders',
+    'rest_framework.authtoken',
 ]
 
 
@@ -55,6 +62,7 @@ IMPORT_EXPORT_USE_TRANSACTIONS = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'videoflix/static/staticfiles/')
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -175,4 +183,13 @@ RQ_QUEUES = {
     },
 }
 
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        # Weitere Authentifizierungsklassen...
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+        # Weitere Berechtigungsklassen...
+    ),
+}
