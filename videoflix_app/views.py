@@ -14,8 +14,9 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth import authenticate
 from rest_framework import status
+from rest_framework import generics
 
-from videoflix_app.models import Video
+from videoflix_app.models import User, Video
 # CACHETTL = getattr(settings, 'CACHETTL', DEFAULT_TIMEOUT)
 
 
@@ -89,3 +90,15 @@ Response: JSON response with token on success or error messages on failure."""
           token, created = Token.objects.get_or_create(user=user)
           return Response({'token': token.key}, status=status.HTTP_200_OK)   # todo if create user then create reponding contact})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RegisterView(generics.CreateAPIView):
+    """
+    View for creating a new user.
+
+    Inherits from `CreateAPIView` and uses the `UserSerializer` to validate and create a new user.
+    """
+    authentication_classes = []
+    permission_classes = []
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

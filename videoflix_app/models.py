@@ -11,7 +11,6 @@ class Video(models.Model):
 
 class User(AbstractUser):
     username = models.CharField(max_length=100, unique=False, default=None, null=True, blank=True)
-    password = models.CharField(max_length=100)
     email = models.EmailField(max_length=100, unique=True)
     remember = models.BooleanField(default=False)
     provider = models.CharField(max_length=100, default=None, null=True, blank=True)
