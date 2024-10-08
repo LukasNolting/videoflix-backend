@@ -97,7 +97,7 @@ INTERNAL_IPS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'videoflix_app/templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -193,3 +193,35 @@ REST_FRAMEWORK = {
         # Weitere Berechtigungsklassen...
     ),
 }
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'w01f1689.kasserver.com'
+EMAIL_PORT = 587  # TLS-Port
+EMAIL_USE_TLS = True  # TLS verwenden
+EMAIL_USE_SSL = False  # SSL deaktivieren
+EMAIL_HOST_USER = 'noreply@lukas-nolting.de'
+EMAIL_HOST_PASSWORD = 'SQvDPA8E7muJAes3a6jz'
+DEFAULT_FROM_EMAIL = 'noreply@lukas-nolting.de'
+DOMAIN_NAME = 'http://localhost:8000'
+
+
+
+# settings.py
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#     },
+# }
