@@ -23,4 +23,6 @@ urlpatterns = [
     path('videoflix/admin/', admin.site.urls),
     path('videoflix/__debug__/', include('debug_toolbar.urls')),
     path('videoflix/', include('videoflix_app.urls')),
+    path('videoflix/rq/', include('django_rq.urls')),
 ] + staticfiles_urlpatterns()
+
