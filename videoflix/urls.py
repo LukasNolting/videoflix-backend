@@ -25,6 +25,7 @@ urlpatterns = [
     path('videoflix/admin/', admin.site.urls),
     path('videoflix/__debug__/', include('debug_toolbar.urls')),
     path('videoflix/', include('videoflix_app.urls')),
+<<<<<<< HEAD
 ] 
 # Adding static files URL patterns
 urlpatterns += staticfiles_urlpatterns()
@@ -32,3 +33,8 @@ urlpatterns += staticfiles_urlpatterns()
 # Adding media files URL patterns
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+=======
+    path('videoflix/rq/', include('django_rq.urls')),
+] + staticfiles_urlpatterns()
+
+>>>>>>> fc7d91b1cafca1920b6a0538245ef6a93075850f

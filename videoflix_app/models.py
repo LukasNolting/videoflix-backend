@@ -18,6 +18,10 @@ class User(AbstractUser):
     email = models.EmailField(max_length=100, unique=True)
     remember = models.BooleanField(default=False)
     provider = models.CharField(max_length=100, default=None, null=True, blank=True)
+    is_active = models.BooleanField(default=False)  # Benutzer ist standardmäßig inaktiv
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD = 'email'  # E-Mail wird als Benutzername verwendet
+    REQUIRED_FIELDS = ['username']  # Username ist erforderlich
+
+    def __str__(self):
+        return self.email  # Optionale String-Repräsentation

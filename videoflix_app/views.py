@@ -33,37 +33,6 @@ class VideoView(View):
         print(videos)
         # Deine Logik hier
         return JsonResponse({'message': 'Dies ist eine GET-Anfrage.'})
-    
-    
-# class LoginView(APIView):
-#     authentication_classes = []
-#     permission_classes = []
-
-#     def post(self, request, *args, **kwargs):
-#         username = request.data.get('email')
-#         print(username)
-#         password = request.data.get('password')
-#         user = authenticate(request, username=username, password=password)
-#         print(user)
-#         if user is not None:
-#             token = self.get_or_create_token(user)
-#             return Response({'token': token}, status=status.HTTP_200_OK)
-#         return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
-
-#     def get_or_create_token(self, user):
-#         """
-#         Gets or creates an authentication token for the user.
-
-#         Args:
-#             user (CustomUser): The user object for whom the token is generated.
-
-#         Returns:
-#             str: The authentication token for the user.
-#         """
-#         token, created = Token.objects.get_or_create(user=user)
-#         return token.key
-
-
 
 class LoginView(APIView):
     """
@@ -105,3 +74,32 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = []
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    
+    
+
+# views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator as token_generator
+from django.contrib import messages
+
+def activate_user(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and token_generator.check_token(user, token):
+        if not user.is_active:  # Überprüfen, ob der Benutzer bereits aktiviert ist
+            user.is_active = True
+            user.save()
+            messages.success(request, 'Dein Konto wurde erfolgreich aktiviert!')
+        else:
+            messages.info(request, 'Dein Konto ist bereits aktiviert.')
+        return redirect('login')
+    else:
+        messages.error(request, 'Der Aktivierungslink ist ungültig oder abgelaufen.')
+        return redirect('home')
+    
