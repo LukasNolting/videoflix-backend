@@ -5,10 +5,11 @@ from django.utils import timezone
 class Video(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(max_length=1000)
+    #category = models.ChoiceField(max_length=100)
     created_at = models.DateTimeField(default=timezone.now)
     video_file = models.FileField(upload_to='videos/', blank=True, null=True)
     thumbnail = models.ImageField(upload_to='thumbnails/', blank=True, null=True)
-    
+    #possible to create thumbnail from video file and upload to thumbnails folder?
     
     def __str__(self):
         return self.title
