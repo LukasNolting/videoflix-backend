@@ -3,16 +3,25 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 
 class Video(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.TextField(max_length=1000)
-    #category = models.ChoiceField(max_length=100)
-    created_at = models.DateTimeField(default=timezone.now)
-    video_file = models.FileField(upload_to='videos/', blank=True, null=True)
-    thumbnail = models.ImageField(upload_to='thumbnails/', blank=True, null=True)
-    #possible to create thumbnail from video file and upload to thumbnails folder?
-    
-    def __str__(self):
-        return self.title
+        CATEGORY_CHOICES = [
+        ('new', 'New'),
+        ('sci-fi', 'Sci-Fi'),
+        ('horror', 'Horror'),
+        ('action', 'Action'),
+        ('drama', 'Drama'),
+        ('comedy', 'Comedy'),
+        ('documentary', 'Documentary'),
+    ]
+        title = models.CharField(max_length=100)
+        description = models.TextField(max_length=1000)
+        category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='new')
+        created_at = models.DateTimeField(default=timezone.now)
+        video_file = models.FileField(upload_to='videos/', blank=True, null=True)
+        thumbnail = models.ImageField(upload_to='thumbnails/', blank=True, null=True)
+        #possible to create thumbnail from video file and upload to thumbnails folder?
+        
+        def __str__(self):
+            return self.title
 
 class User(AbstractUser):
     username = models.CharField(max_length=100, unique=False, default=None, null=True, blank=True)
