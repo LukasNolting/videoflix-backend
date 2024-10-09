@@ -30,6 +30,8 @@ ALLOWED_HOSTS = ['gruppe-49408.developerakademie.org', '127.0.0.1', 'localhost',
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+CSRF_TRUSTED_ORIGINS = ['https://gruppe-49408.developerakademie.org']
+
 CORS_ALLOW_METHODS = ['*']
 
 AUTH_USER_MODEL = 'videoflix_app.User'
@@ -75,17 +77,17 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'videoflix.urls'
 
-CACHES = {    
-        'default': {        
-            'BACKEND': 'django_redis.cache.RedisCache',        
-            'LOCATION': 'redis://127.0.0.1:6379/1',        
-            'OPTIONS': {   
-                'PASSWORD': 'foobared',        
-                'CLIENT_CLASS': 'django_redis.client.DefaultClient'
-            },        
-            'KEY_PREFIX': 'videoflix'    
-    }
-}
+#CACHES = {    
+ #       'default': {        
+  #          'BACKEND': 'django_redis.cache.RedisCache',        
+   #         'LOCATION': 'redis://127.0.0.1:6379/1',        
+   #         'OPTIONS': {   
+  #              'PASSWORD': 'foobared',        
+    #            'CLIENT_CLASS': 'django_redis.client.DefaultClient'
+     #       },        
+      #      'KEY_PREFIX': 'videoflix'    
+   # }
+#}
 
 CACHE_TTL = 60 * 15
 
@@ -178,7 +180,7 @@ RQ_QUEUES = {
         'HOST': 'localhost',
         'PORT': 6379,
         'DB': 0,
-        'PASSWORD': 'foobared',
+#        'PASSWORD': 'foobared',
         'DEFAULT_TIMEOUT': 360,
     },
 }
