@@ -1,13 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 class Video(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    url = models.URLField()
+    title = models.CharField(max_length=100)
+    description = models.TextField(max_length=1000)
+    created_at = models.DateTimeField(default=timezone.now)
+    video_file = models.FileField(upload_to='videos/', blank=True, null=True)
+    thumbnail = models.ImageField(upload_to='thumbnails/', blank=True, null=True)
+    
     
     def __str__(self):
-        return f"{self.name} - {self.description} - {self.url}"
+        return self.title
 
 class User(AbstractUser):
     username = models.CharField(max_length=100, unique=False, default=None, null=True, blank=True)

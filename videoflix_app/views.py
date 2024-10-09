@@ -28,6 +28,9 @@ from videoflix_app.serializers import LoginSerializer, UserSerializer
 
 class VideoView(View):
     def get(self, request, *args, **kwargs):
+            
+        videos = Video.objects.all()
+        print(videos)
         # Deine Logik hier
         return JsonResponse({'message': 'Dies ist eine GET-Anfrage.'})
     
