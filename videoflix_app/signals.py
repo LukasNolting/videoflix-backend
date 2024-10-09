@@ -11,6 +11,7 @@ from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator as token_generator
 from .models import Video
 import os
+from videoflix_app.tasks import convert_video
 import logging
 import django_rq
 
@@ -65,6 +66,7 @@ def video_post_save(sender, instance, created, **kwargs):
     print('Video was created')
     if created:
         print('new Video was created')
+        convert_video(instance.video_file.path)
 
 @receiver(post_delete, sender=Video)
 def video_post_delete(sender, instance, **kwargs):
