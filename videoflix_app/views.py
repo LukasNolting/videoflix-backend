@@ -30,9 +30,8 @@ class VideoView(View):
     def get(self, request, *args, **kwargs):
             
         videos = Video.objects.all()
-        print(videos)
-        # Deine Logik hier
-        return JsonResponse({'message': 'Dies ist eine GET-Anfrage.'})
+        video_list = list(videos.values())
+        return JsonResponse(video_list, safe=False)
 
 class LoginView(APIView):
     """
