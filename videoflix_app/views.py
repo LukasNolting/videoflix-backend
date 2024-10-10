@@ -78,18 +78,24 @@ class RegisterView(generics.CreateAPIView):
 
 # views.py
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator as token_generator
 from django.contrib import messages
 
+# Verwende das benutzerdefinierte User-Modell
+User = get_user_model()
+
 def activate_user(request, uidb64, token):
     try:
+        # Dekodiere die UID
         uid = urlsafe_base64_decode(uidb64).decode()
+        # Hole den Benutzer mit dem benutzerdefinierten User-Modell
         user = User.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
+    # Überprüfe das Token und ob der Benutzer existiert
     if user is not None and token_generator.check_token(user, token):
         if not user.is_active:  # Überprüfen, ob der Benutzer bereits aktiviert ist
             user.is_active = True
@@ -97,8 +103,9 @@ def activate_user(request, uidb64, token):
             messages.success(request, 'Dein Konto wurde erfolgreich aktiviert!')
         else:
             messages.info(request, 'Dein Konto ist bereits aktiviert.')
-        return redirect('login')
+        return redirect('http://localhost:4200/login')
     else:
         messages.error(request, 'Der Aktivierungslink ist ungültig oder abgelaufen.')
-        return redirect('home')
+        return redirect('http://localhost:4200')
+
     
