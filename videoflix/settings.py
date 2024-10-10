@@ -132,6 +132,17 @@ DATABASES = {
 }
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'w01f1689.kasserver.com'
+EMAIL_PORT = 587  # TLS-Port
+EMAIL_USE_TLS = True  # TLS verwenden
+EMAIL_USE_SSL = False  # SSL deaktivieren
+EMAIL_HOST_USER = 'noreply@lukas-nolting.de'
+EMAIL_HOST_PASSWORD = 'SQvDPA8E7muJAes3a6jz'
+DEFAULT_FROM_EMAIL = 'noreply@lukas-nolting.de'
+DOMAIN_NAME = 'http://localhost:8000'
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -188,11 +199,9 @@ RQ_QUEUES = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-        # Weitere Authentifizierungsklassen...
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-        # Weitere Berechtigungsklassen...
     ),
 }
 

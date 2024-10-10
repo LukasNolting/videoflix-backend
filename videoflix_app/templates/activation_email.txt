@@ -1,0 +1,3 @@
+Willkommen {{ user.username }}!
+Bitte klicke auf den folgenden Link, um dein Konto zu aktivieren:
+{{ activation_url }} Konto aktivieren
