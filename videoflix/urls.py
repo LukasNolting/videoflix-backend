@@ -21,6 +21,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from django.conf import settings
 
+from videoflix_app.views import PasswordResetView, RequestPasswordReset
+
 urlpatterns = [
     path('videoflix/admin/', admin.site.urls),
     path('videoflix/__debug__/', include('debug_toolbar.urls')),
