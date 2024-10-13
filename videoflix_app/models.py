@@ -72,16 +72,9 @@ class User(AbstractUser):
     def __str__(self):
         return self.email  # Optionale String-Repräsentation
 
-<<<<<<< HEAD
-# todo : 
-# class UserVideoModel
-# -->start at last stopped time when playing
-# class UserFavoriteModel
-=======
 
 
 class PasswordReset(models.Model):
     email = models.EmailField()
     token = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
->>>>>>> 0d9691ffcfe3de3cb678d6a1fed66a37e8f286fc

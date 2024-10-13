@@ -175,19 +175,16 @@ from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator as token_generator
 from django.contrib.auth import get_user_model  # <-- Importiere hier get_user_model
 import os
-<<<<<<< HEAD
 from videoflix_app.tasks import process_video
 import logging
 from django.core.mail import EmailMultiAlternatives
 import django_rq
 from django.core.files.base import ContentFile
 import threading
-=======
 import logging
 from videoflix_app.tasks import convert_video
 from .models import Video
 from rest_framework.authtoken.models import Token
->>>>>>> 0d9691ffcfe3de3cb678d6a1fed66a37e8f286fc
 
 logger = logging.getLogger(__name__)
 
@@ -237,7 +234,6 @@ def send_activation_email_v2(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Video)
 def video_post_save(sender, instance, created, **kwargs):
-<<<<<<< HEAD
     """
     Starts a new thread to convert and create a thumbnail for a video when it is saved for the first time.
 
@@ -250,9 +246,6 @@ def video_post_save(sender, instance, created, **kwargs):
     :param kwargs: Additional keyword arguments
     """
     print('Video received')
-=======
-    print('Video was created')
->>>>>>> 0d9691ffcfe3de3cb678d6a1fed66a37e8f286fc
     if created:
         print('New video was created')
         thread = threading.Thread(target=process_video, args=(instance,))
@@ -262,14 +255,8 @@ def video_post_save(sender, instance, created, **kwargs):
 @receiver(post_delete, sender=Video)
 def video_post_delete(sender, instance, **kwargs):
     print('Video will be deleted')
-<<<<<<< HEAD
     if instance.video_file:
         if os.path.isfile(instance.video_file.path):
             os.remove(instance.video_file.path)
             print('Video was deleted')
 #todo: delete whole folder and thumbnail
-=======
-    if instance.video_file and os.path.isfile(instance.video_file.path):
-        os.remove(instance.video_file.path)
-        print('Video was deleted')
->>>>>>> 0d9691ffcfe3de3cb678d6a1fed66a37e8f286fc
