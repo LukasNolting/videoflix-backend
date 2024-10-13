@@ -89,16 +89,16 @@ User = get_user_model()
 
 def activate_user(request, uidb64, token):
     try:
-        # Dekodiere die UID
+        
         uid = urlsafe_base64_decode(uidb64).decode()
-        # Hole den Benutzer mit dem benutzerdefinierten User-Modell
+        
         user = User.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
-    # Überprüfe das Token und ob der Benutzer existiert
+    
     if user is not None and token_generator.check_token(user, token):
-        if not user.is_active:  # Überprüfen, ob der Benutzer bereits aktiviert ist
+        if not user.is_active: 
             user.is_active = True
             user.save()
             messages.success(request, 'Dein Konto wurde erfolgreich aktiviert!')
@@ -112,7 +112,7 @@ def activate_user(request, uidb64, token):
     
 from rest_framework import generics
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny #assuming you have a user model
+from rest_framework.permissions import AllowAny
 from rest_framework import status
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from videoflix_app.models import PasswordReset
@@ -124,7 +124,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 
 
-class RequestPasswordReset(generics.GenericAPIView):
+class RequestPasswordReset(APIView):
     permission_classes = [AllowAny]
     User = get_user_model()
     serializer_class = ResetPasswordRequestSerializer
@@ -185,20 +185,24 @@ class PasswordResetView(generics.GenericAPIView):
     def post(self, request, token):
         User = get_user_model()
         
+        # Filtere das PasswordReset Model nach dem Token
         reset_obj = PasswordReset.objects.filter(token=token).first()
         print(f'reset_obj {reset_obj}')
         
         if not reset_obj:
-            return Response({'error':'Invalid token'}, status=400)
+            return Response({'error': 'Invalid token'}, status=400)
         
+        # Suche den User basierend auf der Email in reset_obj
         user = User.objects.filter(email=reset_obj.email).first()
         
         if user:
+            # Setze das neue Passwort
             user.set_password(request.data['password'])
             user.save()
             
+            # Lösche den Reset-Token-Eintrag nach erfolgreichem Passwort-Reset
             reset_obj.delete()
             
-            return Response({'success':'Password updated'})
+            return Response({'success': 'Password updated'})
         else: 
-            return Response({'error':'No user found'}, status=404)
+            return Response({'error': 'No user found'}, status=404)
