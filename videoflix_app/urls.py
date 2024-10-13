@@ -3,8 +3,6 @@ from videoflix_app.views import LoginView, RegisterView, VideoView
 from videoflix_app.views import activate_user
 from .views import RequestPasswordReset, PasswordResetView
 
-
-
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('videos/', VideoView.as_view(), name='video-detail'),
