@@ -64,7 +64,7 @@ class User(AbstractUser):
     email = models.EmailField(max_length=100, unique=True)
     remember = models.BooleanField(default=False)
     provider = models.CharField(max_length=100, default=None, null=True, blank=True)
-    is_active = models.BooleanField(default=True)  # Benutzer ist standardmäßig inaktiv
+    is_active = models.BooleanField(default=False)  # Benutzer ist standardmäßig inaktiv
 
     USERNAME_FIELD = 'email'  # E-Mail wird als Benutzername verwendet
     REQUIRED_FIELDS = ['username']  # Username ist erforderlich
@@ -72,7 +72,16 @@ class User(AbstractUser):
     def __str__(self):
         return self.email  # Optionale String-Repräsentation
 
+<<<<<<< HEAD
 # todo : 
 # class UserVideoModel
 # -->start at last stopped time when playing
 # class UserFavoriteModel
+=======
+
+
+class PasswordReset(models.Model):
+    email = models.EmailField()
+    token = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+>>>>>>> 0d9691ffcfe3de3cb678d6a1fed66a37e8f286fc
