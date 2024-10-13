@@ -10,25 +10,10 @@ class VideoSerializer(serializers.ModelSerializer):
               
 
 class UserSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the User model. Handles user creation and serialization
-    of user data, including password handling.
-    
-    Fields:
-    - id: The user's ID (auto-generated).
-    - username: The username of the user.
-    - email: The email address of the user.
-    - password: The password of the user (write-only).
-    """
-    
     password = serializers.CharField(write_only=True)
 
     def create(self, validated_data):
-        """
-        Create a new user instance with the validated data.
-        The password is hashed before saving the user by using the `create_user` method.
-        """
-        # Verwende die create_user Methode, um das Passwort zu hashen und den User zu erstellen
+        
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
@@ -41,23 +26,11 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email', 'password', 'remember')            
             
 class LoginSerializer(serializers.Serializer):
-    """
-    Serializer for user login. Validates the provided email and password,
-    and authenticates the user if the credentials are correct.
-
-    Fields:
-            
-    email: The email address of the user.
-    password: The password of the user."""
     email = serializers.EmailField()
     password = serializers.CharField()
     remember = serializers.BooleanField(required=False)
 
     def validate(self, data):
-        """
-        Validate the provided email and password. Authenticate the user
-        and raise an error if the credentials are invalid.
-        """
         email = data.get('email')
         password = data.get('password')
 
@@ -73,8 +46,6 @@ class LoginSerializer(serializers.Serializer):
 
         data['user'] = user
         return data        
-    
-    
 
 class ResetPasswordRequestSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)       
+    email = serializers.EmailField(required=True)

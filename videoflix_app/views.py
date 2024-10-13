@@ -1,136 +1,77 @@
-from django.shortcuts import render
-
-# Create your views here.
-from django.core.cache.backends.base import DEFAULT_TIMEOUT 
 from django.urls import reverse
-from django.views.decorators.cache import cache_page 
 from django.conf import settings
-from rest_framework.response import Response
 from django.views import View
-from django.http import JsonResponse
 from rest_framework.views import APIView
-from django.views.generic import TemplateView
 from rest_framework.authtoken.models import Token
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.authtoken.views import ObtainAuthToken
-from django.contrib.auth import authenticate
-from rest_framework import status
 from rest_framework import generics
-
 from videoflix_app.models import User, Video
-# CACHETTL = getattr(settings, 'CACHETTL', DEFAULT_TIMEOUT)
-
-
-# @cache_page(CACHETTL)
-
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework import status
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from videoflix_app.models import PasswordReset
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
 from django.http import JsonResponse
-
 from videoflix_app.serializers import LoginSerializer, ResetPasswordRequestSerializer, UserSerializer
+from django.shortcuts import redirect
+from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator as token_generator
+from django.contrib import messages
+User = get_user_model()
+
+# CACHETTL = getattr(settings, 'CACHETTL', DEFAULT_TIMEOUT)
+# @cache_page(CACHETTL)
 
 class VideoView(View):
     def get(self, request, *args, **kwargs):
-            
         videos = Video.objects.all()
         video_list = list(videos.values())
         return JsonResponse(video_list, safe=False)
 
 class LoginView(APIView):
-    """
-    API view for user login.
-
-    This view handles user authentication by validating login credentials
-    and returning a token if authentication is successful.
-    """
     authentication_classes = []
     permission_classes = []
 
     def post(self, request, *args, **kwargs):
-        """
-        Handle POST request for user login.
-
-        Parameters:
-        
-request: HTTP request containing login data.
-
-        Returns:
-        
-Response: JSON response with token on success or error messages on failure."""
         serializer = LoginSerializer(data=request.data)
-        # print(serializer.is_valid)
         if serializer.is_valid(raise_exception=True):
           user = serializer.validated_data['user']
-          token, created = Token.objects.get_or_create(user=user)
-          return Response({'token': token.key}, status=status.HTTP_200_OK)   # todo if create user then create reponding contact})
+          token = Token.objects.get_or_create(user=user)
+          return Response({'token': token.key}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class RegisterView(generics.CreateAPIView):
-    """
-    View for creating a new user.
-
-    Inherits from `CreateAPIView` and uses the `UserSerializer` to validate and create a new user.
-    """
     authentication_classes = []
     permission_classes = []
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
-    
-
-# views.py
-from django.shortcuts import render, redirect
-from django.contrib.auth import get_user_model
-from django.utils.http import urlsafe_base64_decode
-from django.contrib.auth.tokens import default_token_generator as token_generator
-from django.contrib import messages
-
-# Verwende das benutzerdefinierte User-Modell
-User = get_user_model()
-
 def activate_user(request, uidb64, token):
     try:
-        # Dekodiere die UID
         uid = urlsafe_base64_decode(uidb64).decode()
-        # Hole den Benutzer mit dem benutzerdefinierten User-Modell
         user = User.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
-
-    # Überprüfe das Token und ob der Benutzer existiert
     if user is not None and token_generator.check_token(user, token):
-        if not user.is_active:  # Überprüfen, ob der Benutzer bereits aktiviert ist
+        if not user.is_active: 
             user.is_active = True
             user.save()
-            messages.success(request, 'Dein Konto wurde erfolgreich aktiviert!')
+            messages.success(request, 'Your account has been activated.')
         else:
-            messages.info(request, 'Dein Konto ist bereits aktiviert.')
+            messages.info(request, 'Your account is already activated.')
         return redirect('http://localhost:4200/login')
     else:
-        messages.error(request, 'Der Aktivierungslink ist ungültig oder abgelaufen.')
+        messages.error(request, 'The activation link is invalid!')
         return redirect('http://localhost:4200')
-    
-    
-from rest_framework import generics
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny #assuming you have a user model
-from rest_framework import status
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from videoflix_app.models import PasswordReset
-import os
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.core.mail import EmailMultiAlternatives
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
 
-
-class RequestPasswordReset(generics.GenericAPIView):
+class RequestPasswordReset(APIView):
     permission_classes = [AllowAny]
     User = get_user_model()
     serializer_class = ResetPasswordRequestSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
         email = request.data['email']
         print(email)
         user = User.objects.filter(email__iexact=email).first()
@@ -150,20 +91,16 @@ class RequestPasswordReset(generics.GenericAPIView):
             custom_port_url = 'http://localhost:4200' + relative_reset_url
             full_url = custom_port_url
             print('full-Url' + full_url)
-
-
-            subject = "Passwort zurücksetzen"
+            subject = "Reset your password"
             text_content = render_to_string('emails/forgot_password.txt', {
-                'username': user.username,  # Korrektur hier
+                'username': user.username, 
                 'full_url': full_url,
             })
             html_content = render_to_string('emails/forgot_password.html', {
-                'username': user.username,  # Korrektur hier
+                'username': user.username, 
                 'full_url': full_url,
             })
             print('html' + html_content)
-
-            # # Erstelle die E-Mail
             email = EmailMultiAlternatives(
                 subject,
                 text_content,
@@ -172,33 +109,23 @@ class RequestPasswordReset(generics.GenericAPIView):
             )
             email.attach_alternative(html_content, "text/html")
             email.send()
-
-            return Response({'success': 'Wir haben Ihnen einen Link zur Zurücksetzung Ihres Passworts gesendet'}, status=status.HTTP_200_OK)
+            return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
         else:
-            return Response({"error": "Benutzer mit diesen Anmeldeinformationen nicht gefunden"}, status=status.HTTP_404_NOT_FOUND)
-        
-        
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         
 class PasswordResetView(generics.GenericAPIView):
     permission_classes = []
-
     def post(self, request, token):
-        User = get_user_model()
         
         reset_obj = PasswordReset.objects.filter(token=token).first()
         print(f'reset_obj {reset_obj}')
-        
         if not reset_obj:
-            return Response({'error':'Invalid token'}, status=400)
-        
+            return Response({'error': 'Invalid token'}, status=400)
         user = User.objects.filter(email=reset_obj.email).first()
-        
         if user:
             user.set_password(request.data['password'])
             user.save()
-            
             reset_obj.delete()
-            
-            return Response({'success':'Password updated'})
+            return Response({'success': 'Password updated'})
         else: 
-            return Response({'error':'No user found'}, status=404)
+            return Response({'error': 'No user found'}, status=404)
