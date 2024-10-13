@@ -1,13 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kontoaktivierung</title>
-</head>
-<body>
-    <h2>Willkommen {{ user.username }}!</h2>
-    <p>Bitte klicke auf den folgenden Link, um dein Konto zu aktivieren:</p>
-    <a href="{{ activation_url }}">Konto aktivieren</a>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <style>
+    * {
+      font-family: "DM Sans", sans-serif;
+      font-size: 16px;
+      line-height: 21.71px;
+    }
+    .button {
+      width: 198px;
+      height: 48px;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 23.44px;
+      color: white;
+      background-color: #2e3edf;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 40px;
+      cursor: pointer;
+    }
+    .img-container {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+    img {
+      width: 30%;
+      height: 2.5rem;
+    }
+    a {
+      text-decoration: none;
+    }
+  </style>
+  <body>
+    <br />
+    <div class="img-container">
+      <img
+        src="https://gruppe-49408.developerakademie.org/img/icons/email_logo.svg"
+        alt=""
+      />
+    </div>
+
+    <p>Dear {{ user.username }},</p>
+    <p>
+      Thank you for registering with
+      <a href="https://gruppe-49408.developerakademie.org" target="_blank"
+        >Videoflix</a
+      >. To complete your registration and verify your email address, please
+      click the link below:
+    </p>
+    <br />
+    <a href="{{ activation_url }}" target="_blank" class="button"
+      >Activate account</a
+    >
+    <br />
+    <br>
+
+    <p>
+      If you did not create an account with us, please disregard this email.
+    </p>
+
+    <p>Best regards,</p>
+
+    <p>Your Videoflix Team</p>
+  </body>
 </html>

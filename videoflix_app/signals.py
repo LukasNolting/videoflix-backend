@@ -49,7 +49,7 @@ def send_activation_email_v2(sender, instance, created, **kwargs):
             "emails/activation_email.html",
             context={'user': instance, 'activation_url': full_url},
         )
-        subject = 'Aktiviere dein Konto'
+        subject = 'Confirm your email'
         msg = EmailMultiAlternatives(
             subject,
             text_content,

@@ -19,6 +19,11 @@ from django.contrib.auth import get_user_model
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator as token_generator
 from django.contrib import messages
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.response import Response
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from .models import UserFavoriteVideo, Video
 User = get_user_model()
 
 # CACHETTL = getattr(settings, 'CACHETTL', DEFAULT_TIMEOUT)
@@ -129,3 +134,41 @@ class PasswordResetView(generics.GenericAPIView):
             return Response({'success': 'Password updated'})
         else: 
             return Response({'error': 'No user found'}, status=404)
+        
+
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.response import Response
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from .models import UserFavoriteVideo, Video
+from .serializers import VideoSerializer
+
+@api_view(['GET', 'POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def favorite_videos(request):
+    if request.method == 'GET':
+        favorite_videos = UserFavoriteVideo.objects.filter(user=request.user, is_favorite=True)
+        videos = [favorite.video for favorite in favorite_videos]
+        
+        serializer = VideoSerializer(videos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    elif request.method == 'POST':
+        video_id = request.data.get('video_id')
+        if not video_id:
+            return Response({"error": "video_id is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            video = Video.objects.get(id=video_id)
+        except Video.DoesNotExist:
+            return Response({"error": "Video not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        favorite, created = UserFavoriteVideo.objects.get_or_create(user=request.user, video=video)
+        
+        favorite.is_favorite = not favorite.is_favorite
+        favorite.save()
+        
+        return Response({"is_favorite": favorite.is_favorite}, status=status.HTTP_200_OK)
+
