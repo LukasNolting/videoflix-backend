@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_rq',
     'import_export',
-    'user',
     'corsheaders',
     'rest_framework.authtoken',
 ]
