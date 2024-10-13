@@ -83,6 +83,9 @@ def video_post_save(sender, instance, created, **kwargs):
 @receiver(post_delete, sender=Video)
 def video_post_delete(sender, instance, **kwargs):
     print('Video will be deleted')
-    if instance.video_file and os.path.isfile(instance.video_file.path):
-        os.remove(instance.video_file.path)
-        print('Video was deleted')
+    if instance.video_file:
+        if os.path.isfile(instance.video_file.path):
+            os.remove(instance.video_file.path)
+            print('Video was deleted')
+#todo: delete whole folder and thumbnail
+

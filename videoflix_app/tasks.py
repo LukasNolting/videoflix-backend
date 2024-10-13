@@ -1,8 +1,5 @@
 import subprocess
 
-
-import subprocess
-
 ffmpeg_path = r"C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe"
 RESOLUTIONS = {
     '240p': 'scale=426:240',
@@ -13,7 +10,6 @@ RESOLUTIONS = {
 }
 
 def run_ffmpeg_command(cmd):
-    """Führt einen FFmpeg-Befehl aus und gibt die Ausgabe zurück."""
     result = subprocess.run(cmd, capture_output=True)
     if result.returncode != 0:
         print(f"Fehler: {result.stderr.decode()}")
@@ -21,8 +17,7 @@ def run_ffmpeg_command(cmd):
 
 def convert_video(source):
         
-        
-    """Konvertiert ein Video in verschiedene Auflösungen."""
+    
     for resolution, scale in RESOLUTIONS.items():
         new_file_name = source.replace('.mp4', f'_{resolution}.mp4')
         cmd = [
@@ -35,8 +30,6 @@ def convert_video(source):
 
 
 def process_video(instance):
-    """Verarbeitet das Video und erstellt Thumbnails."""
-    # Video konvertieren
     convert_video(instance.video_file.path)
 
     if instance.video_file:
