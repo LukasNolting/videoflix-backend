@@ -9,6 +9,12 @@ from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator as token_generator
 from django.contrib.auth import get_user_model 
 import os
+from videoflix_app.tasks import process_video
+import logging
+from django.core.mail import EmailMultiAlternatives
+import django_rq
+from django.core.files.base import ContentFile
+import threading
 import logging
 from videoflix_app.tasks import convert_video
 from .models import Video
@@ -56,10 +62,23 @@ def send_activation_email_v2(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Video)
 def video_post_save(sender, instance, created, **kwargs):
-    print('Video was created')
+    """
+    Starts a new thread to convert and create a thumbnail for a video when it is saved for the first time.
+
+    This receiver is connected to the post_save signal of the Video model. When a new video is saved, it starts a new
+    thread which calls the process_video_and_thumbnail function with the instance of the video as argument.
+
+    :param sender: The sender of the signal, usually the Video model
+    :param instance: The instance of the Video model that was saved
+    :param created: A boolean indicating whether the instance was created or updated
+    :param kwargs: Additional keyword arguments
+    """
+    print('Video received')
     if created:
-        print('new Video was created')
-        convert_video(instance.video_file.path)
+        print('New video was created')
+        thread = threading.Thread(target=process_video, args=(instance,))
+        thread.start()
+        
 
 @receiver(post_delete, sender=Video)
 def video_post_delete(sender, instance, **kwargs):

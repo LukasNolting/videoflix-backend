@@ -8,6 +8,7 @@ def video_upload_path(instance, filename):
     folder_path = f'videos/{title}' 
     return f'{folder_path}/{filename}' 
 
+
 class Video(models.Model):
         CATEGORY_CHOICES = [
         ('new', 'New'),
@@ -24,6 +25,7 @@ class Video(models.Model):
         created_at = models.DateTimeField(default=timezone.now)
         video_file = models.FileField(upload_to=video_upload_path, blank=True, null=True)
         thumbnail = models.ImageField(upload_to='thumbnails/', blank=True, null=True)
+        #possible to create thumbnail from video file and upload to thumbnails folder?
         
         def __str__(self):
             return self.title
