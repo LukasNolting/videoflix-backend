@@ -43,7 +43,7 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
           user = serializer.validated_data['user']
-          token = Token.objects.get_or_create(user=user)
+          token, created = Token.objects.get_or_create(user=user)
           return Response({'token': token.key}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -91,7 +91,7 @@ class RequestPasswordReset(APIView):
             print('reset' + f'{reset}')
             reset.save()
 
-            reset_url = reverse('password-reset-token', kwargs={'token': token})
+            reset_url = reverse('password_reset_token', kwargs={'token': token})
             relative_reset_url = reset_url.replace('/videoflix', '')
             custom_port_url = 'http://localhost:4200' + relative_reset_url
             full_url = custom_port_url
