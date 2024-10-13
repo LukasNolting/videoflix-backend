@@ -10,10 +10,12 @@ from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator as token_generator
 from .models import Video, User
 import os
-from videoflix_app.tasks import convert_video
+from videoflix_app.tasks import process_video
 import logging
 from django.core.mail import EmailMultiAlternatives
 import django_rq
+from django.core.files.base import ContentFile
+import threading
 
 logger = logging.getLogger(__name__)
 
@@ -95,27 +97,22 @@ def send_activation_email(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Video)
 def video_post_save(sender, instance, created, **kwargs):
     """
-    Signal receiver for post_save on Video model.
+    Starts a new thread to convert and create a thumbnail for a video when it is saved for the first time.
 
-    This method is connected to the post_save signal of the Video model.
-    When a new Video is created, this method is called. It prints a message
-    to the console for debugging purposes.
+    This receiver is connected to the post_save signal of the Video model. When a new video is saved, it starts a new
+    thread which calls the process_video_and_thumbnail function with the instance of the video as argument.
 
-    Parameters
-    ----------
-    sender : Model class
-        The model class that sent the signal.
-    instance : Model instance
-        The actual instance of the model that was created.
-    created : bool
-        A boolean indicating whether a new record was created.
-    **kwargs
-        Additional keyword arguments.
+    :param sender: The sender of the signal, usually the Video model
+    :param instance: The instance of the Video model that was saved
+    :param created: A boolean indicating whether the instance was created or updated
+    :param kwargs: Additional keyword arguments
     """
-    print('Video was created')
+    print('Video received')
     if created:
-        print('new Video was created')
-        convert_video(instance.video_file.path)
+        print('New video was created')
+        thread = threading.Thread(target=process_video, args=(instance,))
+        thread.start()
+        
 
 @receiver(post_delete, sender=Video)
 def video_post_delete(sender, instance, **kwargs):
@@ -137,3 +134,4 @@ def video_post_delete(sender, instance, **kwargs):
         if os.path.isfile(instance.video_file.path):
             os.remove(instance.video_file.path)
             print('Video was deleted')
+#todo: delete whole folder and thumbnail
