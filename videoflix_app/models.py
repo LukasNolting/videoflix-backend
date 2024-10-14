@@ -72,3 +72,9 @@ class UserFavoriteVideo(models.Model):
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
     is_favorite = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+class UserContinueWatchVideo(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    timestamp = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
