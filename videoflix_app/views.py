@@ -1,3 +1,4 @@
+import time
 from django.urls import reverse
 from django.conf import settings
 from django.views import View
@@ -21,7 +22,7 @@ from django.contrib.auth.tokens import default_token_generator as token_generato
 from django.contrib import messages
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .models import UserFavoriteVideo, Video
+from .models import UserContinueWatchVideo, UserFavoriteVideo, Video
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication
 from .serializers import VideoSerializer
@@ -159,3 +160,56 @@ def favorite_videos(request):
         favorite.is_favorite = not favorite.is_favorite
         favorite.save()
         return Response({"is_favorite": favorite.is_favorite}, status=status.HTTP_200_OK)
+
+@api_view(['GET', 'POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def user_continue_watching(request):
+    if request.method == 'POST':
+        video_id = request.data.get('video_id')
+        timestamp = request.data.get('timestamp')
+        
+        if not video_id:
+            return Response({"error": "video_id is required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if timestamp is None:
+            return Response({"error": "timestamp is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            video = Video.objects.get(id=video_id)
+        except Video.DoesNotExist:
+            return Response({"error": "Video not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        continue_watch, created = UserContinueWatchVideo.objects.get_or_create(
+            user=request.user, video=video,
+            defaults={"timestamp": timestamp}
+        )
+        
+        if not created:
+            continue_watch.timestamp = timestamp
+            continue_watch.save()
+        
+        return Response({"timestamp": continue_watch.timestamp}, status=status.HTTP_200_OK)
+    
+    elif request.method == 'GET':
+        continue_watch_videos = UserContinueWatchVideo.objects.filter(user=request.user)
+        video_ids = Video.objects.filter(id__in=[continue_watch.video.id for continue_watch in continue_watch_videos])
+        videos = Video.objects.filter(id__in=video_ids)
+        video_list = [
+            {
+                "video": {
+                    "id": video.id,
+                    "title": video.title,
+                    "description": video.description,
+                    "category": video.category,
+                    "created_at": video.created_at,
+                    "video_file": video.video_file.url.replace('/media/', '') if video.video_file else None,
+                    "thumbnail": video.thumbnail.url.replace('/media/', '') if video.thumbnail else None,
+                },
+                "timestamp": next(
+                    (cw.timestamp for cw in continue_watch_videos if cw.video_id == video.id), None
+                )
+            }
+            for video in videos
+        ]
+        return JsonResponse(video_list, safe=False)
