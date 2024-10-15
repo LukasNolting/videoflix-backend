@@ -161,7 +161,7 @@ def favorite_videos(request):
         favorite.save()
         return Response({"is_favorite": favorite.is_favorite}, status=status.HTTP_200_OK)
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'DELETE'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def user_continue_watching(request):
@@ -213,3 +213,16 @@ def user_continue_watching(request):
             for video in videos
         ]
         return JsonResponse(video_list, safe=False)
+    
+    elif request.method == 'DELETE':
+        video_id = request.data.get('video_id')
+
+        if not video_id:
+            return Response({"error": "video_id is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            continue_watch = UserContinueWatchVideo.objects.get(user=request.user, video_id=video_id)
+            continue_watch.delete()
+            return Response({"message": "Video removed from continue watching."}, status=status.HTTP_204_NO_CONTENT)
+        except UserContinueWatchVideo.DoesNotExist:
+            return Response({"error": "Video not found in continue watching."}, status=status.HTTP_404_NOT_FOUND)
