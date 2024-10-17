@@ -1,7 +1,7 @@
 from django.urls import include, path
 from videoflix_app.views import LoginView, RegisterView, VideoView
 from videoflix_app.views import activate_user
-from .views import RequestPasswordReset, PasswordResetView, favorite_videos, user_continue_watching
+from .views import RequestPasswordReset, PasswordResetView, VerifyTokenView, favorite_videos, user_continue_watching
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
@@ -12,4 +12,5 @@ urlpatterns = [
     path('password-reset/<token>/', PasswordResetView.as_view(), name='password_reset_token'),
     path('favorite/', favorite_videos, name='toggle_favorite'),
     path('continue-watching/', user_continue_watching, name='continue_watch'),
+    path('authentication/', VerifyTokenView.as_view(), name='verify_token'),
 ]
