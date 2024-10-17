@@ -32,6 +32,8 @@ User = get_user_model()
 # @cache_page(CACHETTL)
 
 class VideoView(View):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         videos = Video.objects.all()
         video_list = list(videos.values())
