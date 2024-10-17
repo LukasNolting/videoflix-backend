@@ -29,14 +29,4 @@ class VideoAdmin(ImportExportModelAdmin):
 #         ('Personal Information', {'fields': ('username', 'email', 'first_name', 'last_name')}),
 #     )
 
-#     def get_auth_token(self, obj):
-#         """Zeigt das Auth-Token für den Benutzer an."""
-#         try:
-#             token = Token.objects.get(user=obj)
-#             return format_html(f'<strong>{token.key}</strong>')
-#         except Token.DoesNotExist:
-#             return 'Kein Token vorhanden'
-
-#     get_auth_token.short_description = 'Auth Token'
-
 # admin.site.register(CustomUserAdmin)
