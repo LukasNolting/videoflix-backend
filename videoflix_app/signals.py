@@ -78,6 +78,7 @@ def video_post_save(sender, instance, created, **kwargs):
         print('New video was created')
         thread = threading.Thread(target=process_video, args=(instance,))
         thread.start()
+        # RQ-Worker anstatt thread
         
 
 @receiver(post_delete, sender=Video)
