@@ -1,63 +1,33 @@
-# import json
-# import time
-# from django.urls import reverse
-# from django.conf import settings
-# from django.views import View
-# from rest_framework.views import APIView
-# from rest_framework.authtoken.models import Token
-# from rest_framework import generics
-# from videoflix_app.models import User, Video
-# from rest_framework.response import Response
-# from rest_framework.permissions import AllowAny
-# from rest_framework import status
-# from django.contrib.auth.tokens import PasswordResetTokenGenerator
-# from videoflix_app.models import PasswordReset
-# from django.template.loader import render_to_string
-# from django.core.mail import EmailMultiAlternatives
-# from django.http import JsonResponse
-# from videoflix_app.serializers import LoginSerializer, ResetPasswordRequestSerializer, UserSerializer
-# from django.shortcuts import redirect
-# from django.contrib.auth import get_user_model
-# from django.utils.http import urlsafe_base64_decode
-# from django.contrib.auth.tokens import default_token_generator as token_generator
-# from django.contrib import messages
-# from rest_framework.decorators import api_view, authentication_classes, permission_classes
-# from rest_framework.permissions import IsAuthenticated
-# from .models import UserContinueWatchVideo, UserFavoriteVideo, Video
-# from rest_framework.decorators import api_view, authentication_classes, permission_classes
-# from rest_framework.authentication import TokenAuthentication
-# from .serializers import VideoSerializer
-#-------------
-# Django imports
-from django.conf import settings
-from django.contrib import messages
-from django.contrib.auth import get_user_model
-from django.contrib.auth.tokens import PasswordResetTokenGenerator, default_token_generator as token_generator
-from django.core.mail import EmailMultiAlternatives
-from django.http import JsonResponse
-from django.shortcuts import redirect
-from django.template.loader import render_to_string
-from django.urls import reverse
-from django.utils.http import urlsafe_base64_decode
-from django.views import View
-
-# Django REST Framework imports
-from rest_framework import generics, status
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-# Project-specific imports
-from .models import PasswordReset, UserContinueWatchVideo, UserFavoriteVideo, Video
-from .serializers import LoginSerializer, ResetPasswordRequestSerializer, UserSerializer, VideoSerializer
-from videoflix_app.models import User, Video
-
-# Python standard library imports
 import json
 import time
+from django.urls import reverse
+from django.conf import settings
+from django.views import View
+from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
+from rest_framework import generics
+from videoflix_app.models import User, Video
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework import status
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from videoflix_app.models import PasswordReset
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
+from django.http import JsonResponse
+from videoflix_app.serializers import LoginSerializer, ResetPasswordRequestSerializer, UserSerializer
+from django.shortcuts import redirect
+from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator as token_generator
+from django.contrib import messages
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from .models import UserContinueWatchVideo, UserFavoriteVideo, Video
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import TokenAuthentication
+from .serializers import VideoSerializer
+
 User = get_user_model()
 
 # CACHETTL = getattr(settings, 'CACHETTL', DEFAULT_TIMEOUT)
@@ -109,6 +79,7 @@ def activate_user(request, uidb64, token):
 
 class RequestPasswordReset(APIView):
     permission_classes = [AllowAny]
+    TokenAuthentication = [AllowAny]
     User = get_user_model()
     serializer_class = ResetPasswordRequestSerializer
 
@@ -154,21 +125,37 @@ class RequestPasswordReset(APIView):
         else:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         
-class PasswordResetView(generics.GenericAPIView):
+class PasswordResetView(APIView):
     permission_classes = []
-    def post(self, request, token):
-        
+
+    def get(self, request, token):
         reset_obj = PasswordReset.objects.filter(token=token).first()
-        print(f'reset_obj {reset_obj}')
+        if not reset_obj:
+            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+        token_lifetime = timedelta(hours=24)
+        print(token_lifetime)
+        if timezone.now() > reset_obj.created_at + token_lifetime:
+            return Response({'error': 'Token expired'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'success': 'Token is valid'}, status=status.HTTP_200_OK)
+
+    def post(self, request, token):
+        reset_obj = PasswordReset.objects.filter(token=token).first()
         if not reset_obj:
             return Response({'error': 'Invalid token'}, status=400)
+
+        token_lifetime = timedelta(hours=24)
+        if timezone.now() > reset_obj.created_at + token_lifetime:
+            return Response({'error': 'Token expired'}, status=400)
+
         user = User.objects.filter(email=reset_obj.email).first()
         if user:
             user.set_password(request.data['password'])
             user.save()
             reset_obj.delete()
             return Response({'success': 'Password updated'})
-        else: 
+        else:
             return Response({'error': 'No user found'}, status=404)
 
 @api_view(['GET', 'POST'])
