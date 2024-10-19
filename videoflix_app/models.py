@@ -8,10 +8,6 @@ def video_upload_path(instance, filename):
     folder_path = f'videos/{title}' 
     return f'{folder_path}/{filename}' 
 
-
-
-
-
 def video_thumbnail_path(instance, filename):
     """
     Returns a path for storing video files on the file system.
@@ -28,8 +24,6 @@ def video_thumbnail_path(instance, filename):
     title = title[:50]  
     folder_path = f'videos/{title}' 
     return f'{folder_path}/{filename}' 
-
-
 
 class Video(models.Model):
         CATEGORY_CHOICES = [

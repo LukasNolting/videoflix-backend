@@ -1,32 +1,63 @@
-import json
-import time
-from django.urls import reverse
+# import json
+# import time
+# from django.urls import reverse
+# from django.conf import settings
+# from django.views import View
+# from rest_framework.views import APIView
+# from rest_framework.authtoken.models import Token
+# from rest_framework import generics
+# from videoflix_app.models import User, Video
+# from rest_framework.response import Response
+# from rest_framework.permissions import AllowAny
+# from rest_framework import status
+# from django.contrib.auth.tokens import PasswordResetTokenGenerator
+# from videoflix_app.models import PasswordReset
+# from django.template.loader import render_to_string
+# from django.core.mail import EmailMultiAlternatives
+# from django.http import JsonResponse
+# from videoflix_app.serializers import LoginSerializer, ResetPasswordRequestSerializer, UserSerializer
+# from django.shortcuts import redirect
+# from django.contrib.auth import get_user_model
+# from django.utils.http import urlsafe_base64_decode
+# from django.contrib.auth.tokens import default_token_generator as token_generator
+# from django.contrib import messages
+# from rest_framework.decorators import api_view, authentication_classes, permission_classes
+# from rest_framework.permissions import IsAuthenticated
+# from .models import UserContinueWatchVideo, UserFavoriteVideo, Video
+# from rest_framework.decorators import api_view, authentication_classes, permission_classes
+# from rest_framework.authentication import TokenAuthentication
+# from .serializers import VideoSerializer
+#-------------
+# Django imports
 from django.conf import settings
-from django.views import View
-from rest_framework.views import APIView
-from rest_framework.authtoken.models import Token
-from rest_framework import generics
-from videoflix_app.models import User, Video
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from rest_framework import status
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from videoflix_app.models import PasswordReset
-from django.template.loader import render_to_string
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import PasswordResetTokenGenerator, default_token_generator as token_generator
 from django.core.mail import EmailMultiAlternatives
 from django.http import JsonResponse
-from videoflix_app.serializers import LoginSerializer, ResetPasswordRequestSerializer, UserSerializer
 from django.shortcuts import redirect
-from django.contrib.auth import get_user_model
+from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.http import urlsafe_base64_decode
-from django.contrib.auth.tokens import default_token_generator as token_generator
-from django.contrib import messages
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from .models import UserContinueWatchVideo, UserFavoriteVideo, Video
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from django.views import View
+
+# Django REST Framework imports
+from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
-from .serializers import VideoSerializer
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+# Project-specific imports
+from .models import PasswordReset, UserContinueWatchVideo, UserFavoriteVideo, Video
+from .serializers import LoginSerializer, ResetPasswordRequestSerializer, UserSerializer, VideoSerializer
+from videoflix_app.models import User, Video
+
+# Python standard library imports
+import json
+import time
 User = get_user_model()
 
 # CACHETTL = getattr(settings, 'CACHETTL', DEFAULT_TIMEOUT)
