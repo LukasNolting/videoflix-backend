@@ -18,6 +18,7 @@ import threading
 import logging
 from .models import Video
 from rest_framework.authtoken.models import Token
+import shutil
 
 
 
@@ -76,8 +77,9 @@ def video_post_save(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=Video)
 def video_post_delete(sender, instance, **kwargs):
-    if instance.video_file:
-        if os.path.isfile(instance.video_file.path):
-            os.remove(instance.video_file.path)
-#todo: delete whole folder and thumbnail
+    print('Video will be deleted')
+    folder_path = os.path.dirname(instance.video_file.path)
+    if os.path.exists(folder_path):
+        shutil.rmtree(folder_path)
+        print(f'Folder {folder_path} was deleted')
 

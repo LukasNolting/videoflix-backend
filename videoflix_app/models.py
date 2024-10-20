@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 
+import re
+
+def clean_filename(title):
+    return re.sub(r'[^a-zA-Z0-9_]+', '_', title)
+
 def video_upload_path(instance, filename):
     title = instance.title.replace(' ', '_') 
     title = title[:50]  
