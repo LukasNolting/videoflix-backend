@@ -16,7 +16,6 @@ import django_rq
 from django.core.files.base import ContentFile
 import threading
 import logging
-from videoflix_app.tasks import convert_video
 from .models import Video
 from rest_framework.authtoken.models import Token
 
