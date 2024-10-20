@@ -19,6 +19,7 @@ import logging
 from videoflix_app.tasks import convert_video
 from .models import Video
 from rest_framework.authtoken.models import Token
+import shutil
 
 logger = logging.getLogger(__name__)
 User = get_user_model() 
@@ -84,9 +85,8 @@ def video_post_save(sender, instance, created, **kwargs):
 @receiver(post_delete, sender=Video)
 def video_post_delete(sender, instance, **kwargs):
     print('Video will be deleted')
-    if instance.video_file:
-        if os.path.isfile(instance.video_file.path):
-            os.remove(instance.video_file.path)
-            print('Video was deleted')
-#todo: delete whole folder and thumbnail
+    folder_path = os.path.dirname(instance.video_file.path)
+    if os.path.exists(folder_path):
+        shutil.rmtree(folder_path)
+        print(f'Folder {folder_path} was deleted')
 

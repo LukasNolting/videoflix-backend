@@ -2,33 +2,24 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 
+import re
+
+def clean_filename(title):
+    return re.sub(r'[^a-zA-Z0-9_]+', '_', title)
+
 def video_upload_path(instance, filename):
-    title = instance.title.replace(' ', '_') 
-    title = title[:50]  
-    folder_path = f'videos/{title}' 
-    return f'{folder_path}/{filename}' 
-
-
-
-
+    title = instance.title
+    title = clean_filename(title)
+    title = title[:50]
+    folder_path = f'videos/{title}'
+    return f'{folder_path}/{filename}'
 
 def video_thumbnail_path(instance, filename):
-    """
-    Returns a path for storing video files on the file system.
-
-    The path is determined by the title of the video, with the title
-    being converted to a valid filename and truncated to 50 characters.
-    The path will be `videos/<title>/<filename>`.
-
-    :param instance: The Video model instance
-    :param filename: The name of the file to be uploaded
-    :return: The path to store the video file
-    """
-    title = instance.title.replace(' ', '_') 
-    title = title[:50]  
-    folder_path = f'videos/{title}' 
-    return f'{folder_path}/{filename}' 
-
+    title = instance.title
+    title = clean_filename(title)
+    title = title[:50]
+    folder_path = f'videos/{title}'
+    return f'{folder_path}/{filename}'
 
 
 class Video(models.Model):
