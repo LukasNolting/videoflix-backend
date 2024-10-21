@@ -1,5 +1,4 @@
-import json
-import time
+from datetime import timedelta, timezone
 from django.urls import reverse
 from django.conf import settings
 from django.views import View
@@ -26,7 +25,6 @@ from rest_framework.permissions import IsAuthenticated
 from .models import UserContinueWatchVideo, UserFavoriteVideo, Video
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication
-from .serializers import VideoSerializer
 
 User = get_user_model()
 

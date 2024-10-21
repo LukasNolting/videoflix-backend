@@ -1,19 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
-
 import re
 
 def clean_filename(title):
     return re.sub(r'[^a-zA-Z0-9_]+', '_', title)
 
-def video_upload_path(instance, filename):
-    title = clean_filename(instance.title)
-    title = title[:50]  
-    folder_path = f'videos/{title}' 
-    return f'{folder_path}/{filename}' 
-
-def video_thumbnail_path(instance, filename):
+def video_file_path(instance, filename):
     title = clean_filename(instance.title)
     title = title[:50]  
     folder_path = f'videos/{title}' 
@@ -32,8 +25,8 @@ class Video(models.Model):
         description = models.TextField(max_length=1000)
         category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='new')
         created_at = models.DateTimeField(default=timezone.now)
-        video_file = models.FileField(upload_to=video_upload_path, blank=True, null=True)
-        thumbnail = models.ImageField(upload_to=video_thumbnail_path, blank=True, null=True)
+        video_file = models.FileField(upload_to=video_file_path, blank=True, null=True)
+        thumbnail = models.ImageField(upload_to=video_file_path, blank=True, null=True)
         
         def __str__(self):
             return self.title
