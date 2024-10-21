@@ -26,8 +26,8 @@ from rest_framework.permissions import IsAuthenticated
 from .models import UserContinueWatchVideo, UserFavoriteVideo, Video
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication
-from datetime import timedelta
-from django.utils import timezone
+from .serializers import VideoSerializer
+
 User = get_user_model()
 
 # CACHETTL = getattr(settings, 'CACHETTL', DEFAULT_TIMEOUT)

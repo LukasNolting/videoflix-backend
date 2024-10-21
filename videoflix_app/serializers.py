@@ -11,9 +11,7 @@ class VideoSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
-
     def create(self, validated_data):
-        
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
@@ -33,12 +31,8 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, data):
         email = data.get('email')
         password = data.get('password')
-
-        print(email, password)
         if email and password:
-            print(email, password)
             user = authenticate(username=email, password=password)
-            print(user)
             if not user:
                 raise serializers.ValidationError("Invalid login credentials")
         else:

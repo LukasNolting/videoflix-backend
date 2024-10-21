@@ -1,6 +1,5 @@
 from django.urls import include, path
-from videoflix_app.views import LoginView, RegisterView, VideoView
-from videoflix_app.views import activate_user
+from videoflix_app.views import LoginView, RegisterView, VideoView, activate_user
 from .views import RequestPasswordReset, PasswordResetView, VerifyTokenView, favorite_videos, user_continue_watching
 
 urlpatterns = [
