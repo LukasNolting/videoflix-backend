@@ -1,4 +1,5 @@
-from datetime import timedelta, timezone
+from datetime import timedelta
+from django.utils import timezone
 from django.urls import reverse
 from django.conf import settings
 from django.views import View
