@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model, tokens
 from django.contrib.auth.tokens import PasswordResetTokenGenerator, default_token_generator as token_generator
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
+from django.core.cache import cache
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
@@ -29,10 +30,14 @@ User = get_user_model()
 class VideoView(View):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
-        videos = Video.objects.all()
-        video_list = list(videos.values())
-        return JsonResponse(video_list, safe=False)
+        cached_videos = cache.get('all_videos')
+        if cached_videos is None:
+            videos = Video.objects.all()
+            cached_videos = list(videos.values())
+            cache.set('all_videos', cached_videos, timeout=60*15)
+        return JsonResponse(cached_videos, safe=False)
 
 class LoginView(APIView):
     authentication_classes = []

@@ -61,18 +61,17 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'videoflix.urls'
 
-# todo fix redis/ use cache 
-# CACHES = {    
-#        'default': {        
-#            'BACKEND': 'django_redis.cache.RedisCache',        
-#            'LOCATION': 'redis://127.0.0.1:6379/1',        
-#            'OPTIONS': {   
-#                'PASSWORD': 'foobared',        
-#                'CLIENT_CLASS': 'django_redis.client.DefaultClient'
-#            },        
-#            'KEY_PREFIX': 'videoflix'    
-#    }
-# }
+CACHES = {    
+       'default': {        
+           'BACKEND': 'django_redis.cache.RedisCache',        
+           'LOCATION': 'redis://127.0.0.1:6379/1',        
+           'OPTIONS': {   
+               'PASSWORD': 'foobared',        
+               'CLIENT_CLASS': 'django_redis.client.DefaultClient'
+           },        
+           'KEY_PREFIX': 'videoflix'    
+   }
+}
 
 CACHE_TTL = 60 * 15
 
@@ -166,13 +165,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 RQ_QUEUES = {
     'default': {
-        'HOST': 'localhost',
+        'HOST': '172.20.240.1',  
         'PORT': 6379,
         'DB': 0,
-#        'PASSWORD': 'foobared',
-        'DEFAULT_TIMEOUT': 360,
-    },
+        'PASSWORD': 'foobared',  
+        'DEFAULT_TIMEOUT': 1000,  
+    }
 }
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
