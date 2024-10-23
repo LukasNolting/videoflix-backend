@@ -1,4 +1,6 @@
-from django.urls import path
+from django.urls import path, include
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
 from videoflix_app.views import (
     LoginView, 
     RegisterView, 
@@ -21,4 +23,5 @@ urlpatterns = [
     path('favorite/', favorite_videos, name='toggle_favorite'),
     path('continue-watching/', user_continue_watching, name='continue_watch'),
     path('authentication/', VerifyTokenView.as_view(), name='verify_token'),
+    path('django-rq/', include('django_rq.urls')),
 ]

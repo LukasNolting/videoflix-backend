@@ -1,3 +1,5 @@
+from django_rq import job
+
 import subprocess
 import os
 
@@ -36,8 +38,12 @@ def convert_video_to_hls(source):
         ]
         run_ffmpeg_command(cmd)
 
+@job('default')
 def process_video(instance):
     convert_video_to_hls(instance.video_file.path)
     if instance.video_file:
         print('Video was converted to HLS format')
         instance.save()
+
+def convert_video_to_hls(video_path):
+    print(f'Processing video {video_path}')
