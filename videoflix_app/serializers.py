@@ -1,7 +1,9 @@
-from videoflix_app.models import User, Video
-from rest_framework import serializers
 from django.contrib.auth import authenticate
-from django.contrib.auth.hashers import make_password
+
+from rest_framework import serializers
+
+from videoflix_app.models import User, Video
+
 
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:

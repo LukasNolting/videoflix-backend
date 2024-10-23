@@ -1,3 +1,8 @@
+import os
+import logging
+import shutil
+import threading
+
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.core.mail import EmailMultiAlternatives
@@ -6,21 +11,16 @@ from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.conf import settings
+from django.contrib.auth import get_user_model, tokens
 from django.contrib.auth.tokens import default_token_generator as token_generator
-from django.contrib.auth import get_user_model 
-import os
-from videoflix_app.tasks import process_video
-import logging
-from django.core.mail import EmailMultiAlternatives
-import django_rq
 from django.core.files.base import ContentFile
-import threading
-import logging
-from .models import Video
+
+import django_rq
+
 from rest_framework.authtoken.models import Token
-import shutil
 
-
+from videoflix_app.tasks import process_video
+from .models import Video
 
 logger = logging.getLogger(__name__)
 User = get_user_model() 
