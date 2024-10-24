@@ -16,7 +16,6 @@ def video_file_path(instance, filename):
 
 class Video(models.Model):
         CATEGORY_CHOICES = [
-        ('sci-fi', 'Sci-Fi'),
         ('horror', 'Horror'),
         ('action', 'Action'),
         ('drama', 'Drama'),

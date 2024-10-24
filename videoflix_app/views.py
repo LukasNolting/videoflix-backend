@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model, tokens
 from django.contrib.auth.tokens import PasswordResetTokenGenerator, default_token_generator as token_generator
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
+from django.utils.http import urlsafe_base64_decode
 from django.core.cache import cache
 from django.http import JsonResponse
 from rest_framework.views import APIView
@@ -20,12 +21,12 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.authentication import TokenAuthentication
 from videoflix_app.models import User, Video, PasswordReset, UserContinueWatchVideo, UserFavoriteVideo
 from videoflix_app.serializers import LoginSerializer, ResetPasswordRequestSerializer, UserSerializer
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 User = get_user_model()
-
-# CACHETTL = getattr(settings, 'CACHETTL', DEFAULT_TIMEOUT)
-# @cache_page(CACHETTL)
 
 class VideoView(View):
     authentication_classes = [TokenAuthentication]
@@ -70,10 +71,10 @@ def activate_user(request, uidb64, token):
             messages.success(request, 'Your account has been activated.')
         else:
             messages.info(request, 'Your account is already activated.')
-        return redirect('http://localhost:4200/login')
+        return redirect(os.getenv('REDIRECT_LOGIN'))
     else:
         messages.error(request, 'The activation link is invalid!')
-        return redirect('http://localhost:4200')
+        return redirect(os.getenv('REDIRECT_LANDING'))
 
 class RequestPasswordReset(APIView):
     permission_classes = [AllowAny]
@@ -98,7 +99,7 @@ class RequestPasswordReset(APIView):
 
             reset_url = reverse('password_reset_token', kwargs={'token': token})
             relative_reset_url = reset_url.replace('/videoflix', '')
-            custom_port_url = 'http://localhost:4200' + relative_reset_url
+            custom_port_url = os.getenv('REDIRECT_LANDING') + relative_reset_url
             full_url = custom_port_url
             print('full-Url' + full_url)
             subject = "Reset your password"
