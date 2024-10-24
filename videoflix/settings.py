@@ -1,5 +1,8 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -8,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-i$!@0i3b6v%-sx9&ofsfddvsm694fgtt3t%66r5au3@%cl1_uo'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -64,9 +67,9 @@ ROOT_URLCONF = 'videoflix.urls'
 CACHES = {    
        'default': {        
            'BACKEND': 'django_redis.cache.RedisCache',        
-           'LOCATION': 'redis://127.0.0.1:6379/1',        
+           'LOCATION': os.getenv('REDIS_URL'),        
            'OPTIONS': {   
-               'PASSWORD': 'foobared',        
+               'PASSWORD': os.getenv('REDIS_PASSWORD'),        
                'CLIENT_CLASS': 'django_redis.client.DefaultClient'
            },        
            'KEY_PREFIX': 'videoflix'    
@@ -103,11 +106,11 @@ WSGI_APPLICATION = 'videoflix.wsgi.application'
 DATABASES = {
     'default': {
 	'ENGINE': 'django.db.backends.postgresql',
-	'NAME': 'videoflix',
-	'USER': 'postgres',
-	'PASSWORD': '49408',
-	'HOST': 'localhost',
-	'PORT': '5432',
+	'NAME': os.getenv('DATABASE_NAME'),
+	'USER': os.getenv('DATABASE_USER'),
+	'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+	'HOST': os.getenv('DATABASE_HOST'),
+	'PORT': os.getenv('DATABASE_PORT'),
     'OPTIONS': {
         'client_encoding': 'UTF8',
         },
@@ -115,14 +118,14 @@ DATABASES = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'w01f1689.kasserver.com'
-EMAIL_PORT = 587
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-EMAIL_HOST_USER = 'noreply@lukas-nolting.de'
-EMAIL_HOST_PASSWORD = 'SQvDPA8E7muJAes3a6jz'
-DEFAULT_FROM_EMAIL = 'noreply@lukas-nolting.de'
-DOMAIN_NAME = 'http://localhost:8000'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+DOMAIN_NAME = os.getenv('DOMAIN_NAME')
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -165,10 +168,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 RQ_QUEUES = {
     'default': {
-        'HOST': '172.20.240.1',  
-        'PORT': 6379,
+        'HOST': os.getenv('RQ_HOST'),
+        'PORT': os.getenv('RQ_PORT'),
         'DB': 0,
-        'PASSWORD': 'foobared',  
+        'PASSWORD': os.getenv('RQ_PASSWORD'),  
         'DEFAULT_TIMEOUT': 1000,  
     }
 }

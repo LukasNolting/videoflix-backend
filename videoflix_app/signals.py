@@ -15,7 +15,7 @@ from django.contrib.auth import get_user_model, tokens
 from django.contrib.auth.tokens import default_token_generator as token_generator
 from django.core.files.base import ContentFile
 
-import django_rq
+from django_rq import job, get_queue
 
 from rest_framework.authtoken.models import Token
 
@@ -58,8 +58,8 @@ def send_activation_email_v2(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Video)
 def video_post_save(sender, instance, created, **kwargs):
     if created:
-        process_video.delay(instance)
-        
+        queue = get_queue('default')
+        queue.enqueue(process_video, instance)
 
 @receiver(post_delete, sender=Video)
 def video_post_delete(sender, instance, **kwargs):
