@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-ffmpeg_path = os.getenv('FFMPEG_PATH')
+ffmpeg_path = r'/usr/bin/ffmpeg'
 RESOLUTIONS = {
     '240p': 'scale=426:240',
     '360p': 'scale=640:360',
