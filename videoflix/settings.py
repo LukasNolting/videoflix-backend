@@ -21,6 +21,10 @@ ALLOWED_HOSTS = json.loads(os.getenv('ALLOWED_HOSTS', '[]'))
 
 CORS_ALLOW_ALL_ORIGINS = False
 
+CORS_ALLOWED_ORIGINS = json.loads(os.getenv('CORS_ALLOWED_ORIGINS', '[]'))
+
+CORS_ALLOW_CREDENTIALS = True
+
 CSRF_TRUSTED_ORIGINS = json.loads(os.getenv('CSRF_TRUSTED_ORIGINS', '[]'))
 
 CORS_ALLOW_METHODS = ['*']
