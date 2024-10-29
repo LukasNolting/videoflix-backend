@@ -69,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'videoflix_app.middleware.LogIPMiddleware',
 ]
 
 ROOT_URLCONF = 'videoflix.urls'
@@ -198,3 +199,26 @@ REST_FRAMEWORK = {
 #media settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+<<<<<<< HEAD
+
+
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'videoflix_app.middleware': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    },
+}
+=======
+>>>>>>> a5277473accfb7ab9159892460dea5257e0dd6e0
