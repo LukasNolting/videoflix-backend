@@ -43,11 +43,11 @@ def send_activation_email_v2(sender, instance, created, **kwargs):
         domain_url = os.getenv('REDIRECT_LANDING')
         text_content = render_to_string(
             "emails/activation_email.txt",
-            context={'user': instance, 'activation_url': full_url, domain_url: domain_url},
+            context={'user': instance, 'activation_url': full_url, 'domain_url': domain_url},
         )
         html_content = render_to_string(
             "emails/activation_email.html",
-            context={'user': instance, 'activation_url': full_url, domain_url: domain_url},
+            context={'user': instance, 'activation_url': full_url, 'domain_url': domain_url},
         )
         subject = 'Confirm your email'
         msg = EmailMultiAlternatives(
