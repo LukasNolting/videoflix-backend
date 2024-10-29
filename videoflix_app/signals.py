@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import logging
 import shutil
 import threading
@@ -22,6 +23,8 @@ from rest_framework.authtoken.models import Token
 from videoflix_app.tasks import process_video
 from .models import Video
 
+load_dotenv()
+
 logger = logging.getLogger(__name__)
 User = get_user_model() 
 
@@ -37,13 +40,14 @@ def send_activation_email_v2(sender, instance, created, **kwargs):
         uid = urlsafe_base64_encode(force_bytes(instance.pk))
         activation_url = reverse('activate_user', kwargs={'uidb64': uid, 'token': token})
         full_url = f'{settings.DOMAIN_NAME}{activation_url}'
+        domain_url = os.getenv('REDIRECT_LANDING')
         text_content = render_to_string(
             "emails/activation_email.txt",
-            context={'user': instance, 'activation_url': full_url},
+            context={'user': instance, 'activation_url': full_url, domain_url: domain_url},
         )
         html_content = render_to_string(
             "emails/activation_email.html",
-            context={'user': instance, 'activation_url': full_url},
+            context={'user': instance, 'activation_url': full_url, domain_url: domain_url},
         )
         subject = 'Confirm your email'
         msg = EmailMultiAlternatives(
