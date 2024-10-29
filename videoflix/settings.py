@@ -16,11 +16,11 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['gruppe-49408.developerakademie.org', '127.0.0.1', 'localhost', 'http://localhost:4200']
+ALLOWED_HOSTS = ['45.145.42.94','backend.lukas-nolting.eu', '127.0.0.1', 'localhost', 'http://localhost:4200']
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-CSRF_TRUSTED_ORIGINS = ['https://gruppe-49408.developerakademie.org']
+CSRF_TRUSTED_ORIGINS = ['http://45.145.42.94','https://backend.lukas-nolting.eu']
 
 CORS_ALLOW_METHODS = ['*']
 
