@@ -76,7 +76,7 @@ class RequestPasswordReset(APIView):
 
             reset_url = reverse('password_reset_token', kwargs={'token': token})
             relative_reset_url = reset_url.replace('/videoflix', '')
-            custom_port_url = os.getenv('DOMAIN_NAME') + relative_reset_url
+            custom_port_url = os.getenv('REDIRECT_LANDING') + relative_reset_url
             full_url = custom_port_url
             domain_url = os.getenv('REDIRECT_LANDING')
             subject = "Reset your password"
