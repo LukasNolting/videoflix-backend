@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 
@@ -16,11 +17,19 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = ['45.145.42.94','backend.lukas-nolting.eu', '127.0.0.1', 'localhost', 'http://localhost:4200']
 
 CORS_ALLOW_ALL_ORIGINS = True
 
 CSRF_TRUSTED_ORIGINS = ['http://45.145.42.94','https://backend.lukas-nolting.eu']
+=======
+ALLOWED_HOSTS = json.loads(os.getenv('ALLOWED_HOSTS', '[]'))
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CSRF_TRUSTED_ORIGINS = json.loads(os.getenv('CSRF_TRUSTED_ORIGINS', '[]'))
+>>>>>>> 6b750260303c348af8422b5cd53858e2c4a7f6d9
 
 CORS_ALLOW_METHODS = ['*']
 

@@ -66,32 +66,29 @@ class RequestPasswordReset(APIView):
 
     def post(self, request):
         email = request.data['email']
-        print(email)
         user = User.objects.filter(email__iexact=email).first()
-        print(user)
 
         if user:
             token_generator = PasswordResetTokenGenerator()
-            print('Token-Generator' + f'{token_generator}')
             token = token_generator.make_token(user) 
-            print('Token' + f'{token}')
             reset = PasswordReset(email=email, token=token)
-            print('reset' + f'{reset}')
             reset.save()
 
             reset_url = reverse('password_reset_token', kwargs={'token': token})
             relative_reset_url = reset_url.replace('/videoflix', '')
             custom_port_url = os.getenv('REDIRECT_LANDING') + relative_reset_url
             full_url = custom_port_url
-            print('full-Url' + full_url)
+            domain_url = os.getenv('REDIRECT_LANDING')
             subject = "Reset your password"
             text_content = render_to_string('emails/forgot_password.txt', {
                 'username': user.username, 
                 'full_url': full_url,
+                'domain_url': domain_url,
             })
             html_content = render_to_string('emails/forgot_password.html', {
                 'username': user.username, 
                 'full_url': full_url,
+                'domain_url': domain_url,
             })
             print('html' + html_content)
             email = EmailMultiAlternatives(
