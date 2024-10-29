@@ -191,13 +191,10 @@ REST_FRAMEWORK = {
 #media settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-<<<<<<< HEAD
 
 
 
 
-=======
->>>>>>> 6765f7e3514ef672ef91a6411e7f4c6f2531b776
 
 LOGGING = {
     'version': 1,
