@@ -3,6 +3,7 @@ import os
 from django_rq import job
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 ffmpeg_path = r'/usr/bin/ffmpeg'
@@ -15,23 +16,34 @@ RESOLUTIONS = {
 }
 
 def run_ffmpeg_command(cmd):
+    """
+    Runs an ffmpeg command, checks for errors and prints them if there are any
+    :param cmd: The list of arguments to pass to ffmpeg
+    :return: The return code of the ffmpeg command
+    """
     result = subprocess.run(cmd, capture_output=True)
     if result.returncode != 0:
-        print(f"Fehler: {result.stderr.decode()}")
+        print(f"Error: {result.stderr.decode()}")
     return result.returncode
 
 def convert_video_to_hls(video_path):
-    print(f"Original video_path: {video_path}")
+    """
+    Converts a video file to multiple HLS streams with different resolutions.
+
+    This function takes a video file path, and for each predefined resolution,
+    creates an HLS (HTTP Live Streaming) output directory containing the playlist
+    and segment files. The conversion is performed using ffmpeg with specified
+    video and audio codecs.
+
+    :param video_path: The file path of the input video to be converted.
+    """
     video_basename = os.path.splitext(video_path)[0]
-    print(f"video_basename: {video_basename}")
 
     for resolution, scale in RESOLUTIONS.items():
         hls_output_dir = f"{video_basename}_{resolution}_hls"
-        print(f"hls_output_dir: {hls_output_dir}")
         os.makedirs(hls_output_dir, exist_ok=True)
 
         hls_playlist = os.path.join(hls_output_dir, f"index.m3u8")
-        print(f"hls_playlist: {hls_playlist}")
 
         cmd = [
             ffmpeg_path, '-i', video_path,
@@ -46,17 +58,27 @@ def convert_video_to_hls(video_path):
 
         return_code = run_ffmpeg_command(cmd)
         if return_code != 0:
-            print(f"Fehler bei der Konvertierung in {resolution}")
+            print(f"Error: Failed to convert video to {resolution}")
 
 @job('default')
 def process_video(instance):
-    print(f'instance: {instance.video_file.path}')
+    """
+    Job to convert a Video instance's video_file to HLS (HTTP Live Streaming)
+    format.
+
+    The function takes an instance of the Video model as an argument, checks if
+    the video file exists, and if yes, converts it to HLS format using ffmpeg.
+
+    The converted video is saved in separate folders with the same name as the
+    original video but with the appended resolution (e.g. "video_240p_hls").
+
+    :param instance: An instance of the Video model
+    :return: None
+    """
     if not os.path.exists(instance.video_file.path):
-        print(f"Fehler: Die Datei {instance.video_file.path} existiert nicht.")
         return
 
     convert_video_to_hls(instance.video_file.path)
 
     if instance.video_file:
-        print('Video wurde erfolgreich in das HLS-Format konvertiert')
         instance.save()
