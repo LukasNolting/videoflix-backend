@@ -5,6 +5,7 @@ from rest_framework import serializers
 from videoflix_app.models import User, Video
 
 
+
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
@@ -14,6 +15,12 @@ class VideoSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     def create(self, validated_data):
+        """
+        Creates a new user with the given validated_data.
+
+        :param validated_data: A dictionary of validated data from the request
+        :return: The newly created user
+        """
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
@@ -31,6 +38,14 @@ class LoginSerializer(serializers.Serializer):
     remember = serializers.BooleanField(required=False)
 
     def validate(self, data):
+        """
+        Validates the given data for a login request.
+
+        :param data: A dictionary of the given data
+        :return: The validated data with the user object added
+        :raises: serializers.ValidationError if the credentials are invalid
+        :raises: serializers.ValidationError if either email or password is empty
+        """
         email = data.get('email')
         password = data.get('password')
         if email and password:

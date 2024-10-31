@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 
 
+
 def clean_filename(title):
     return re.sub(r'[^a-zA-Z0-9_]+', '_', title)
 
@@ -30,6 +31,9 @@ class Video(models.Model):
         thumbnail = models.ImageField(upload_to=video_file_path, blank=True, null=True)
         
         def __str__(self):
+            """
+            Returns a string representation of the Video instance, specifically the title of the video.
+            """
             return self.title
 
 class User(AbstractUser):
@@ -42,6 +46,9 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username']
 
     def __str__(self):
+        """
+        Returns a string representation of the User instance, specifically the email address of the user.
+        """
         return self.email
 
 class PasswordReset(models.Model):

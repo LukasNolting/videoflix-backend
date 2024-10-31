@@ -19,6 +19,13 @@ class VideoAdmin(ImportExportModelAdmin):
     search_fields = ('title', 'description')
 
     def video_thumbnail(self, obj):
+        """
+        Returns an HTML image tag with the video's thumbnail if available,
+        otherwise returns a text indicating no thumbnail is available.
+
+        :param obj: The Video object.
+        :return: An HTML string representing the thumbnail or a "No Thumbnail" text.
+        """
         if obj.thumbnail:
             return format_html('<img src="{}" width="100" height="100" />'.format(obj.thumbnail.url))
         return "No Thumbnail"
