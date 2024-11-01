@@ -51,8 +51,6 @@ INSTALLED_APPS = [
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
-DEBUG = True
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'videoflix/static/staticfiles/')
 
 MIDDLEWARE = [
