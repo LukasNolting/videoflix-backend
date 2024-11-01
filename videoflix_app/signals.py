@@ -32,22 +32,20 @@ User = get_user_model()
 @receiver(post_save, sender=User)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     """
-    Signal receiver to create a new Token for a User instance when
-    one is created. This is the default behavior of the
-    rest_framework.authtoken app when running the
-    `createauthtoken` management command.
+    Signal receiver to create a new Token for a User instance when one is created.
+    This is the default behavior of the rest_framework.authtoken app when running 
+    the `createauthtoken` management command.
 
     Args:
-        sender (User): The User model class
-        instance (User): The User instance being saved
-        created (bool): Whether the instance is being created
-            (True) or updated (False)
+        sender (User): The User model class.
+        instance (User): The User instance being saved.
+        created (bool): Whether the instance is being created (True) or updated (False).
     """
     if created:
         Token.objects.create(user=instance)
 
 @receiver(post_save, sender=User) 
-def send_activation_email_v2(sender, instance, created, **kwargs):
+def send_activation_email(sender, instance, created, **kwargs):
     """
     Signal receiver to send an activation email to a User instance when
     one is created and not yet activated.
@@ -91,7 +89,7 @@ def video_post_save(sender, instance, created, **kwargs):
         sender (Video): The Video model class
         instance (Video): The Video instance being saved
         created (bool): Whether the instance is being created (True) or updated (False)
-        **kwargs: Additional keyword arguments
+        kwargs: Additional keyword arguments
     """
     if created:
         queue = get_queue('default')
@@ -103,9 +101,9 @@ def video_post_delete(sender, instance, **kwargs):
     Signal receiver to delete the video file folder when a Video instance is deleted.
 
     Args:
-        sender (Video): The Video model class
-        instance (Video): The Video instance being deleted
-        **kwargs: Additional keyword arguments
+        sender (Video): The Video model class.
+        instance (Video): The Video instance being deleted.
+        kwargs: Additional keyword arguments.
     """
     folder_path = os.path.dirname(instance.video_file.path)
     if os.path.exists(folder_path):

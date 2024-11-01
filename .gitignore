@@ -9,6 +9,7 @@ static/
 /logs/
 media/
 /static/staticfiles/
+/docs
 
 # SQLite DB & Migrations
 **/migrations/**
