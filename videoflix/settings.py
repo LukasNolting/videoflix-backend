@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'videoflix_app',
     'rest_framework',
-    'debug_toolbar',
+    # 'debug_toolbar',
     'django_rq',
     'import_export',
     'corsheaders',
