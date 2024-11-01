@@ -4,13 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
-  <style>
-    * {
-      font-family: "DM Sans", sans-serif;
-      font-size: 16px;
-      line-height: 21.71px;
-    }
-    .button {
+  <body style="font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 21.71px;">
+    <br />
+    <div style="display: flex; justify-content: center; width: 100%;">
+      <img
+        src="{{ domain_url }}/img/logos/logo_big.png"
+        alt=""
+        style="max-width: 300px; height: auto;"
+      />
+    </div>
+
+    <p>Dear {{ user.username }},</p>
+    <p>
+      Thank you for registering with
+      <a href="{{ domain_url }}" target="_blank" style="text-decoration: none;"
+        >Videoflix</a
+      >. To complete your registration and verify your email address, please
+      click the link below:
+    </p>
+    <br />
+    <a href="{{ activation_url }}" target="_blank" style="
+      display: inline-block;
       width: 198px;
       height: 48px;
       gap: 10px;
@@ -23,41 +37,9 @@
       padding: 12px 24px;
       border-radius: 40px;
       cursor: pointer;
-    }
-    .img-container {
-      display: flex;
-      justify-content: center;
-      width: 100%;
-    }
-    img {
-      max-width: 300px;
-      height: auto;
-    }
-    a {
       text-decoration: none;
-    }
-  </style>
-  <body>
-    <br />
-    <div class="img-container">
-      <img
-        src="{{ domain_url }}/img/logos/logo_big.png"
-        alt=""
-      />
-    </div>
-
-    <p>Dear {{ user.username }},</p>
-    <p>
-      Thank you for registering with
-      <a href="{{ domain_url }}" target="_blank"
-        >Videoflix</a
-      >. To complete your registration and verify your email address, please
-      click the link below:
-    </p>
-    <br />
-    <a href="{{ activation_url }}" target="_blank" class="button"
-      >Activate account</a
-    >
+      text-align: center;
+    ">Activate account</a>
     <br />
     <br>
 
