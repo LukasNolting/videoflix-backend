@@ -51,7 +51,7 @@ INSTALLED_APPS = [
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'videoflix/static/staticfiles/')
+STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
