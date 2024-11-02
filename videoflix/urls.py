@@ -13,4 +13,4 @@ urlpatterns = [
 urlpatterns += staticfiles_urlpatterns()
 
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_ROOT_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
