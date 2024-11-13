@@ -9,3 +9,4 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += path('videoflix/__debug__/', include('debug_toolbar.urls')),
+    
