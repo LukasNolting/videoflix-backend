@@ -95,8 +95,8 @@ def user_continue_watching(request):
                     "description": video.description,
                     "category": video.category,
                     "created_at": video.created_at,
-                    "video_file": video.video_file.url,.replace('/videoflix/media/', '') if video.video_file else None,
-                    "thumbnail": video.thumbnail.url,.replace('/videoflix/media/', '') if video.thumbnail else None,
+                    "video_file": video.video_file.url.replace('/videoflix/media/', '') if video.video_file else None,
+                    "thumbnail": video.thumbnail.url.replace('/videoflix/media/', '') if video.thumbnail else None,
                 },
                 "timestamp": next(
                     (cw.timestamp for cw in continue_watch_videos if cw.video_id == video.id), None
